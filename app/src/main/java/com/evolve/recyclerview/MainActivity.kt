@@ -6,7 +6,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.evolve.recyclerview.databinding.ActivityMainBinding
-import com.evolve.recyclerview.models.jsonModel
+import com.evolve.recyclerview.models.AppListModel
+import com.evolve.recyclerview.models.FeaturedItems
+import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
@@ -14,6 +16,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        activity.tabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab : TabLayout.Tab) {
+                if (tab.position == 1) retrieveRepositories(1)
+                else retrieveRepositories()
+            }
+            override fun onTabUnselected(p0: TabLayout.Tab?) {}
+            override fun onTabReselected(p0: TabLayout.Tab?) {}
+        })
 
         if (isNetworkConnected()) {
             retrieveRepositories()
@@ -26,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun retrieveRepositories() {
+    private fun retrieveRepositories(choice: Int = 0) {
         val mainActivityJob = Job()
 
         val errorHandler = CoroutineExceptionHandler { _, exception ->
@@ -38,20 +49,29 @@ class MainActivity : AppCompatActivity() {
 
         val coroutineScope = CoroutineScope(mainActivityJob + Dispatchers.Main)
         coroutineScope.launch(errorHandler) {
-            val resultList = Retriever().getAppList()
-            initRV(resultList)
+            when (choice){
+                1 ->    initRVfeatured(Retriever().getFeaturedAppList())
+                else -> initRVall(Retriever().getAppList())
+            }
         }
     }
 
     private fun addDataSet() {
         val data = LocalDataSource.createDataSet(applicationContext)
-        initRV(data)
+        initRVall(data)
     }
 
-    private fun initRV(data: jsonModel) {
+    private fun initRVall(data: AppListModel) {
         activity.rv.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = RVAdapter(data.applist.apps)
+            adapter = AllAppsAdapter(data.applist.apps)
+        }
+    }
+
+    private fun initRVfeatured(data: FeaturedItems) {
+        activity.rv.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = FeaturedAppsAdapter(data.items)
         }
     }
 }

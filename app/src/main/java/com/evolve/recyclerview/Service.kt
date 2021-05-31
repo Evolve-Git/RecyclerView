@@ -1,9 +1,13 @@
 package com.evolve.recyclerview
 
-import com.evolve.recyclerview.models.jsonModel
+import com.evolve.recyclerview.models.FeaturedAppsModel
+import com.evolve.recyclerview.models.AppListModel
 import retrofit2.http.GET
 
 interface Service {
-    @GET("ISteamApps/GetAppList/v0002/?key="+ SteamAPIkey+ "&format=json")
-    suspend fun retrieveAppList(): jsonModel
+    @GET("https://api.steampowered.com/ISteamApps/GetAppList/v2/")
+    suspend fun retrieveAppList(): AppListModel
+
+    @GET("https://store.steampowered.com/api/featured/?l=english")
+    suspend fun retrieveFeaturedAppList(): FeaturedAppsModel
 }

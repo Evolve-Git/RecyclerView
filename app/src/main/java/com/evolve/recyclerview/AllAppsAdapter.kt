@@ -7,16 +7,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.evolve.recyclerview.databinding.RvItemBinding
-import com.evolve.recyclerview.models.appModel
+import com.evolve.recyclerview.models.AppModel
 
-class RVAdapter(private val itemList: List<appModel>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AllAppsAdapter(private val itemList: List<AppModel>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return modelViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.rv_item, parent, false))
+        return AllAppsModelViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.rv_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is modelViewHolder -> holder.bind(itemList[position])
+            is AllAppsModelViewHolder -> holder.bind(itemList[position])
         }
     }
 
@@ -24,13 +24,13 @@ class RVAdapter(private val itemList: List<appModel>): RecyclerView.Adapter<Recy
         return itemList.size
     }
 
-    class modelViewHolder constructor(itemView: View): RecyclerView.ViewHolder(itemView){
+    class AllAppsModelViewHolder constructor(itemView: View): RecyclerView.ViewHolder(itemView){
         private val binding = RvItemBinding.bind(itemView)
         private val modelImage = binding.modelImage
         private val modelTitle = binding.modelTitle
         private val modelId = binding.modelId
 
-        fun bind(model: appModel){
+        fun bind(model: AppModel){
             modelTitle.text = model.name
             modelId.text = model.appid.toString()
 
