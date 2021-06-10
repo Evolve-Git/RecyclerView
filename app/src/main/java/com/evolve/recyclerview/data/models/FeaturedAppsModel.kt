@@ -1,4 +1,4 @@
-package com.evolve.recyclerview.models
+package com.evolve.recyclerview.data.models
 
 data class FeaturedApp(
         val id: Int,
@@ -11,11 +11,11 @@ data class FeaturedApp(
         )
 
 data class FeaturedItems(
-        val items: List<FeaturedApp>
+        val items: ArrayList<FeaturedApp>
         )
 
 data class FeaturedAppsModel (
-        val large_capsules: List<FeaturedApp>,
-        val featured_win: List<FeaturedApp>,
-        val featured_linux: List<FeaturedApp>
+        val large_capsules: ArrayList<FeaturedApp>,
+        val featured_win: ArrayList<FeaturedApp>,
+        val featured_linux: ArrayList<FeaturedApp>
         )

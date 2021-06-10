@@ -1,6 +1,6 @@
-package com.evolve.recyclerview
+package com.evolve.recyclerview.data
 
-import com.evolve.recyclerview.models.*
+import com.evolve.recyclerview.data.models.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -25,8 +25,8 @@ class Retriever {
 
     suspend fun getFeaturedAppList(): FeaturedItems {
         val fAPPlist: FeaturedAppsModel = service.retrieveFeaturedAppList()
-        val parsedList = fAPPlist.large_capsules +
-                fAPPlist.featured_win + fAPPlist.featured_linux
+        val parsedList = (fAPPlist.large_capsules +
+                fAPPlist.featured_win + fAPPlist.featured_linux) as ArrayList
         return FeaturedItems(parsedList)
     }
 }

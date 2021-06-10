@@ -1,4 +1,4 @@
-package com.evolve.recyclerview.models
+package com.evolve.recyclerview.data.models
 
 data class AppModel (
         val appid: Int,

@@ -1,31 +1,30 @@
-package com.evolve.recyclerview
+package com.evolve.recyclerview.data.adapters
 
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.evolve.recyclerview.R
 import com.evolve.recyclerview.databinding.RvItemBinding
-import com.evolve.recyclerview.models.FeaturedApp
+import com.evolve.recyclerview.data.models.FeaturedApp
 
-class FeaturedAppsAdapter(private val itemList: List<FeaturedApp>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return AllAppsModelViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.rv_item, parent, false))
+class FeaturedAppsAdapter: ListAdapter<FeaturedApp, FeaturedAppsAdapter.FeaturedAppsModelViewHolder>(
+    DiffCallback()
+) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeaturedAppsModelViewHolder {
+        return FeaturedAppsModelViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.rv_item, parent, false))
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is AllAppsModelViewHolder -> holder.bind(itemList[position])
-        }
+    override fun onBindViewHolder(holder: FeaturedAppsModelViewHolder, position: Int) {
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int {
-        return itemList.size
-    }
-
-    class AllAppsModelViewHolder constructor(itemView: View): RecyclerView.ViewHolder(itemView) {
+    class FeaturedAppsModelViewHolder constructor(itemView: View): RecyclerView.ViewHolder(itemView) {
         private val binding = RvItemBinding.bind(itemView)
         private val modelImage = binding.modelImage
         private val modelTitle = binding.modelTitle
@@ -54,6 +53,17 @@ class FeaturedAppsAdapter(private val itemList: List<FeaturedApp>): RecyclerView
                 .applyDefaultRequestOptions(requestOptions)
                 .load(model.header_image)
                 .into(modelImage)
+        }
+    }
+
+    class DiffCallback : DiffUtil.ItemCallback<FeaturedApp>() {
+
+        override fun areItemsTheSame(oldItem: FeaturedApp, newItem: FeaturedApp): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: FeaturedApp, newItem: FeaturedApp): Boolean {
+            return oldItem == newItem
         }
     }
 }

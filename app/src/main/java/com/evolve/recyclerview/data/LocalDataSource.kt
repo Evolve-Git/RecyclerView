@@ -1,8 +1,7 @@
-package com.evolve.recyclerview
+package com.evolve.recyclerview.data
 
 import android.content.Context
-import android.util.Log
-import com.evolve.recyclerview.models.AppListModel
+import com.evolve.recyclerview.data.models.AppListModel
 import com.google.gson.Gson
 
 class LocalDataSource {
@@ -14,7 +13,6 @@ class LocalDataSource {
 
             val gson = Gson()
             val result: AppListModel = gson.fromJson(jsonString, AppListModel::class.java)
-            Log.e("json", result.toString())
             return result
         }
     }

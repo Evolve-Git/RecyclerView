@@ -1,7 +1,7 @@
-package com.evolve.recyclerview
+package com.evolve.recyclerview.data
 
-import com.evolve.recyclerview.models.FeaturedAppsModel
-import com.evolve.recyclerview.models.AppListModel
+import com.evolve.recyclerview.data.models.FeaturedAppsModel
+import com.evolve.recyclerview.data.models.AppListModel
 import retrofit2.http.GET
 
 interface Service {
