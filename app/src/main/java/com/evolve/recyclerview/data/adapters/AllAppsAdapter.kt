@@ -12,7 +12,8 @@ import com.evolve.recyclerview.R
 import com.evolve.recyclerview.databinding.RvItemBinding
 import com.evolve.recyclerview.data.models.AppModel
 
-class AllAppsAdapter: ListAdapter<AppModel, AllAppsAdapter.AllAppsModelViewHolder>(DiffCallback()) {
+class AllAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<AppModel,
+        AllAppsAdapter.AllAppsModelViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllAppsModelViewHolder {
         return AllAppsModelViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.rv_item,
             parent, false))
@@ -20,6 +21,7 @@ class AllAppsAdapter: ListAdapter<AppModel, AllAppsAdapter.AllAppsModelViewHolde
 
     override fun onBindViewHolder(holder: AllAppsModelViewHolder, position: Int) {
         holder.bind(getItem(position))
+        holder.itemView.setOnClickListener { clickListener(holder.steamId) }
     }
 
     class AllAppsModelViewHolder constructor(itemView: View): RecyclerView.ViewHolder(itemView){
@@ -27,8 +29,10 @@ class AllAppsAdapter: ListAdapter<AppModel, AllAppsAdapter.AllAppsModelViewHolde
         private val modelImage = binding.modelImage
         private val modelTitle = binding.modelTitle
         private val modelId = binding.modelId
+        var steamId = 0
 
         fun bind(model: AppModel){
+            steamId = model.appid
             modelTitle.text = model.name
             modelId.text = model.appid.toString()
 
@@ -42,15 +46,15 @@ class AllAppsAdapter: ListAdapter<AppModel, AllAppsAdapter.AllAppsModelViewHolde
                     .into(modelImage)
         }
     }
+}
 
-    //Cant find any uses for this:
-    class DiffCallback : DiffUtil.ItemCallback<AppModel>() {
-        override fun areItemsTheSame(oldItem: AppModel, newItem: AppModel): Boolean {
-            return oldItem.appid == newItem.appid
-        }
+//Cant find any uses for this:
+class DiffCallback : DiffUtil.ItemCallback<AppModel>() {
+    override fun areItemsTheSame(oldItem: AppModel, newItem: AppModel): Boolean {
+        return oldItem.appid == newItem.appid
+    }
 
-        override fun areContentsTheSame(oldItem: AppModel, newItem: AppModel): Boolean {
-            return oldItem == newItem
-        }
+    override fun areContentsTheSame(oldItem: AppModel, newItem: AppModel): Boolean {
+        return oldItem == newItem
     }
 }

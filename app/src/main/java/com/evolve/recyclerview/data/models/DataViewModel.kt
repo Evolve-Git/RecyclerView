@@ -3,5 +3,6 @@ package com.evolve.recyclerview.data.models
 import androidx.lifecycle.ViewModel
 
 class DataViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+    var app_id = 0
+    var appDetailCache = mutableMapOf<Int, AppDetailModel>()
 }

@@ -1,18 +1,18 @@
 package com.evolve.recyclerview.data
 
 import android.content.Context
-import com.evolve.recyclerview.data.models.AppListModel
+import com.evolve.recyclerview.data.models.AllAppsModel
 import com.google.gson.Gson
 
 class LocalDataSource {
     companion object{
 
-        fun createDataSet(context: Context): AppListModel {
+        fun createDataSet(context: Context): AllAppsModel {
             val jsonString = context.assets.open("api.steampowered.com.json").bufferedReader()
                 .use { it.readText() }
 
             val gson = Gson()
-            val result: AppListModel = gson.fromJson(jsonString, AppListModel::class.java)
+            val result: AllAppsModel = gson.fromJson(jsonString, AllAppsModel::class.java)
             return result
         }
     }

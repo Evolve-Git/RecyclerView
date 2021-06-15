@@ -9,6 +9,6 @@ data class AppList (
         val apps: ArrayList<AppModel>
         )
 
-data class AppListModel (
+data class AllAppsModel (
         val applist: AppList
         )

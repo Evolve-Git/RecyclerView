@@ -13,15 +13,16 @@ import com.evolve.recyclerview.R
 import com.evolve.recyclerview.databinding.RvItemBinding
 import com.evolve.recyclerview.data.models.FeaturedApp
 
-class FeaturedAppsAdapter: ListAdapter<FeaturedApp, FeaturedAppsAdapter.FeaturedAppsModelViewHolder>(
-    DiffCallback()
-) {
+class FeaturedAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<FeaturedApp,
+        FeaturedAppsAdapter.FeaturedAppsModelViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeaturedAppsModelViewHolder {
-        return FeaturedAppsModelViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.rv_item, parent, false))
+        return FeaturedAppsModelViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.rv_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: FeaturedAppsModelViewHolder, position: Int) {
         holder.bind(getItem(position))
+        holder.itemView.setOnClickListener { clickListener(holder.steamId) }
     }
 
     class FeaturedAppsModelViewHolder constructor(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -29,8 +30,10 @@ class FeaturedAppsAdapter: ListAdapter<FeaturedApp, FeaturedAppsAdapter.Featured
         private val modelImage = binding.modelImage
         private val modelTitle = binding.modelTitle
         private val modelId = binding.modelId
+        var steamId = 0
 
         fun bind(model: FeaturedApp) {
+            steamId = model.id
             modelTitle.text = model.name
 
             var tempOriginalPrice = model.original_price

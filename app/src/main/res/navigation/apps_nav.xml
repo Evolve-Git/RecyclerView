@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/apps_nav"
+    app:startDestination="@id/RVFragment">
+
+    <fragment
+        android:id="@+id/RVFragment"
+        android:name="com.evolve.recyclerview.RVFragment"
+        android:label="RVFragment" >
+        <action
+            android:id="@+id/action_RVFragment_to_appDetailsFragment"
+            app:destination="@id/appDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/appDetailsFragment"
+        android:name="com.evolve.recyclerview.AppDetailsFragment"
+        android:label="AppDetailsFragment" />
+</navigation>

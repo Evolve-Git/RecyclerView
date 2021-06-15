@@ -17,6 +17,13 @@ class MainActivity : AppCompatActivity() {
         activity = DataBindingUtil.setContentView(this,
             R.layout.activity_main)
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         viewModel = ViewModelProvider(this).get(DataViewModel::class.java)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 }

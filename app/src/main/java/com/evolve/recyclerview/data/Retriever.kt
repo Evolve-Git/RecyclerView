@@ -1,5 +1,6 @@
 package com.evolve.recyclerview.data
 
+import android.util.Log
 import com.evolve.recyclerview.data.models.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -19,7 +20,7 @@ class Retriever {
         service = retrofit.create(Service::class.java)
     }
 
-    suspend fun getAppList(): AppListModel {
+    suspend fun getAppList(): AllAppsModel {
         return service.retrieveAppList()
     }
 
@@ -28,5 +29,10 @@ class Retriever {
         val parsedList = (fAPPlist.large_capsules +
                 fAPPlist.featured_win + fAPPlist.featured_linux) as ArrayList
         return FeaturedItems(parsedList)
+    }
+
+    suspend fun getAppDetails(id: Int): Map<Int, AppDetailModel> {
+        Log.e("ser", service.retrieveAppDetails(id).toString())
+        return service.retrieveAppDetails(id)
     }
 }
