@@ -79,7 +79,7 @@ class AppDetailsFragment : Fragment() {
                 binding.genres.text = genres.dropLast(2)
 
                 if (data.metacritic != null)
-                    binding.metacritic.text = "Metacritic score: ${data.metacritic}"
+                    binding.metacritic.text = "Metacritic score: ${data.metacritic!!.score}"
                 else binding.metacritic.text = "Metacritic score is not available."
             }
             else {

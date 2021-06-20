@@ -2,8 +2,18 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/apps_nav"
-    app:startDestination="@id/RVFragment">
+    app:startDestination="@id/loadingFragment">
 
+    <fragment
+        android:id="@+id/loadingFragment"
+        android:name="com.evolve.recyclerview.LoadingFragment"
+        android:label="LoadingFragment" >
+        <action
+            android:id="@+id/action_loadingFragment_to_RVFragment"
+            app:destination="@id/RVFragment"
+            app:popUpTo="@id/loadingFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/RVFragment"
         android:name="com.evolve.recyclerview.RVFragment"

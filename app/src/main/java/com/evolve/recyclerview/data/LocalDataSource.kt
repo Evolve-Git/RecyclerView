@@ -7,7 +7,7 @@ import com.google.gson.Gson
 class LocalDataSource {
     companion object{
 
-        fun createDataSet(context: Context): AllAppsModel {
+        fun loadAllAppsData(context: Context): AllAppsModel {
             val jsonString = context.assets.open("api.steampowered.com.json").bufferedReader()
                 .use { it.readText() }
 
