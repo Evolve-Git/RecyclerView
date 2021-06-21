@@ -81,13 +81,13 @@ class RVFragment : Fragment() {
                 else {
                     when (binding.tabLayout.selectedTabPosition){
                         1 ->    {
-                            viewModel.favApps.add(AppModel(viewModel.featuredApps.items[position].id,
+                            addToFavList(AppModel(viewModel.featuredApps.items[position].id,
                                 viewModel.featuredApps.items[position].name))
                             viewModel.featuredApps.items.removeAt(position)
                         }
                         2 ->    viewModel.favApps.removeAt(position)
                         else -> {
-                            viewModel.favApps.add(viewModel.allApps.applist.apps[position])
+                            addToFavList(viewModel.allApps.applist.apps[position])
                             viewModel.allApps.applist.apps.removeAt(position)
                         }
                     }
@@ -98,6 +98,11 @@ class RVFragment : Fragment() {
 
         val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
         itemTouchHelper.attachToRecyclerView(binding.rv)
+    }
+
+    private fun addToFavList(app: AppModel){
+        if (!viewModel.favApps.contains(app))
+            viewModel.favApps.add(app)
     }
 
     private fun retrieveRepositories(choice: Int) {

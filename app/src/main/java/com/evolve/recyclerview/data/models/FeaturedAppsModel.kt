@@ -1,13 +1,13 @@
 package com.evolve.recyclerview.data.models
 
 data class FeaturedApp(
-        val id: Int,
-        val name: String,
-        val discounted: Boolean,
-        val original_price: Int,
-        val final_price: Int,
-        val currency: String,
-        val header_image: String
+        val id: Int = 0,
+        val name: String = "",
+        val discounted: Boolean = false,
+        val original_price: Int = 0,
+        val final_price: Int = 0,
+        val currency: String = "",
+        val header_image: String = ""
         )
 
 data class FeaturedItems(

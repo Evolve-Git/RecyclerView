@@ -1,6 +1,5 @@
 package com.evolve.recyclerview.data
 
-import android.util.Log
 import com.evolve.recyclerview.data.models.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -32,7 +31,6 @@ class Retriever {
     }
 
     suspend fun getAppDetails(id: Int): Map<Int, AppDetailModel> {
-        Log.e("ser", service.retrieveAppDetails(id).toString())
         return service.retrieveAppDetails(id)
     }
 }

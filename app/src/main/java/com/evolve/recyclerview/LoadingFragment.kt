@@ -1,7 +1,6 @@
 package com.evolve.recyclerview
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -29,12 +28,11 @@ class LoadingFragment : Fragment() {
             if (requireActivity().isNetworkConnected()) {
                 viewModel.allApps = Retriever().getAppList()
                 viewModel.featuredApps = Retriever().getFeaturedAppList()
-                viewModel.favApps = arrayListOf()
-                Log.e("vm", viewModel.toString())
+                viewModel.favApps = LocalDataSource.loadFavAppsData(requireContext())
+                view?.findNavController()?.navigate(R.id.action_loadingFragment_to_RVFragment)
             } else {
                 noNetwork()
             }
-            view?.findNavController()?.navigate(R.id.action_loadingFragment_to_RVFragment)
         }
     }
 
@@ -50,6 +48,9 @@ class LoadingFragment : Fragment() {
 
     private fun useLocalData(){
         viewModel.allApps = LocalDataSource.loadAllAppsData(requireContext())
+        viewModel.featuredApps = LocalDataSource.loadFeaturedAppsData(requireContext())
+        viewModel.favApps = LocalDataSource.loadFavAppsData(requireContext())
+        view?.findNavController()?.navigate(R.id.action_loadingFragment_to_RVFragment)
     }
 
     private fun noNetwork(){
