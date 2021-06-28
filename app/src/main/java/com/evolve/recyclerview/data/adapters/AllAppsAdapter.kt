@@ -11,6 +11,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.evolve.recyclerview.R
 import com.evolve.recyclerview.databinding.RvItemBinding
 import com.evolve.recyclerview.data.models.AppModel
+import com.evolve.recyclerview.utility.retrieveImage
 
 class AllAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<AppModel,
         AllAppsAdapter.AllAppsModelViewHolder>(DiffCallback()) {
@@ -36,14 +37,9 @@ class AllAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<AppModel,
             modelTitle.text = model.name
             modelId.text = model.appid.toString()
 
-            val requestOptions = RequestOptions()
-                    .placeholder(R.drawable.image)
-                    .error(R.drawable.image)
-            Glide.with(itemView.context)
-                    .applyDefaultRequestOptions(requestOptions)
-                    .load("https://steamcdn-a.akamaihd.net/steam/apps/"+
-                            model.appid.toString()+"/header_292x136.jpg")
-                    .into(modelImage)
+            retrieveImage(R.drawable.image, itemView,
+                "https://steamcdn-a.akamaihd.net/steam/apps/"+
+                    model.appid.toString()+"/header_292x136.jpg", modelImage)
         }
     }
 }

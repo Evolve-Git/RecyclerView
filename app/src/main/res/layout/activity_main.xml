@@ -9,6 +9,24 @@
         android:orientation="vertical"
         tools:context=".MainActivity">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:title="@string/app_name"
+            app:titleTextColor="?attr/colorOnPrimary">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_report_image"
+                tools:ignore="ContentDescription" />
+        </androidx.appcompat.widget.Toolbar>
+
         <fragment
             android:id="@+id/GreeterNavHostFragment"
             android:name="androidx.navigation.fragment.NavHostFragment"

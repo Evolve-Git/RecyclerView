@@ -25,13 +25,13 @@ class LoadingFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         CoroutineScope(Dispatchers.Main).launch {
-            if (requireActivity().isNetworkConnected()) {
+            if (viewModel.network) {
                 viewModel.allApps = Retriever().getAppList()
                 viewModel.featuredApps = Retriever().getFeaturedAppList()
                 viewModel.favApps = LocalDataSource.loadFavAppsData(requireContext())
                 view?.findNavController()?.navigate(R.id.action_loadingFragment_to_RVFragment)
             } else {
-                noNetwork()
+                useLocalData()
             }
         }
     }
@@ -51,13 +51,5 @@ class LoadingFragment : Fragment() {
         viewModel.featuredApps = LocalDataSource.loadFeaturedAppsData(requireContext())
         viewModel.favApps = LocalDataSource.loadFavAppsData(requireContext())
         view?.findNavController()?.navigate(R.id.action_loadingFragment_to_RVFragment)
-    }
-
-    private fun noNetwork(){
-        AlertDialog.Builder(requireContext()).setTitle("No Internet Connection")
-            .setMessage("Web data is unreachable, load the local data?")
-            .setPositiveButton(android.R.string.ok) { _, _ -> useLocalData()}
-            .setNegativeButton(android.R.string.cancel) { _, _ -> }
-            .setIcon(android.R.drawable.ic_dialog_alert).show()
     }
 }

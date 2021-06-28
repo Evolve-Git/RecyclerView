@@ -56,7 +56,7 @@ class RVFragment : Fragment() {
     }
 
     private fun onClick(id: Int){
-        viewModel.app_id = id
+        viewModel.appId = id
         view?.findNavController()?.navigate(R.id.action_RVFragment_to_appDetailsFragment)
     }
 

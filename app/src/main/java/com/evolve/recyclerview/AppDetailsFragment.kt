@@ -10,12 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.evolve.recyclerview.data.Retriever
 import com.evolve.recyclerview.data.models.Data
 import com.evolve.recyclerview.data.models.DataViewModel
 import com.evolve.recyclerview.databinding.FragmentAppDetailsBinding
+import com.evolve.recyclerview.utility.retrieveImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,14 +36,14 @@ class AppDetailsFragment : Fragment() {
 
         CoroutineScope(Dispatchers.Main).launch {
             if (requireActivity().isNetworkConnected()) {
-                if (!viewModel.appDetailCache.containsKey(viewModel.app_id)) {
-                    val appDetails = Retriever().getAppDetails(viewModel.app_id)
-                    if ((appDetails[viewModel.app_id] != null) && appDetails[viewModel.app_id]!!.success)
+                if (!viewModel.appDetailCache.containsKey(viewModel.appId)) {
+                    val appDetails = Retriever().getAppDetails(viewModel.appId)
+                    if ((appDetails[viewModel.appId] != null) && appDetails[viewModel.appId]!!.success)
                         viewModel.appDetailCache.putAll(appDetails)
                 }
 
-                if (viewModel.appDetailCache[viewModel.app_id] != null) {
-                    data = viewModel.appDetailCache[viewModel.app_id]!!.data
+                if (viewModel.appDetailCache[viewModel.appId] != null) {
+                    data = viewModel.appDetailCache[viewModel.appId]!!.data
 
                     binding.id.text = "AppId: ${data.steam_appid}"
 
@@ -56,8 +55,8 @@ class AppDetailsFragment : Fragment() {
                     else data.price_overview?.final_formatted
                     binding.price.text = price
 
-                    var screenshotCounter = 0
                     loadImage(data.header_image)
+                    var screenshotCounter = 0
                     binding.image.setOnClickListener {
                         if (data.screenshots != null) {
                             loadImage(data.screenshots!![screenshotCounter].path_thumbnail)
@@ -95,13 +94,7 @@ class AppDetailsFragment : Fragment() {
     }
 
     private fun loadImage(img: String){
-        val requestOptions = RequestOptions()
-            .placeholder(R.drawable.image)
-            .error(R.drawable.image)
-        Glide.with(binding.root)
-            .applyDefaultRequestOptions(requestOptions)
-            .load(img)
-            .into(binding.image)
+        retrieveImage(R.drawable.image, binding.root, img, binding.image)
     }
 
     private fun toggleDescription(){

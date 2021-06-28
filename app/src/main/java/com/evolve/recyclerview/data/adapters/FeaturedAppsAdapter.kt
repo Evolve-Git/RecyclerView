@@ -12,6 +12,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.evolve.recyclerview.R
 import com.evolve.recyclerview.databinding.RvItemBinding
 import com.evolve.recyclerview.data.models.FeaturedApp
+import com.evolve.recyclerview.utility.retrieveImage
 
 class FeaturedAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<FeaturedApp,
         FeaturedAppsAdapter.FeaturedAppsModelViewHolder>(DiffCallback()) {
@@ -49,13 +50,7 @@ class FeaturedAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<Feature
             if (model.final_price == 0) price = "<b>FREE</b>"
             modelId.text = Html.fromHtml("Price: $price", Html.FROM_HTML_MODE_COMPACT)
 
-            val requestOptions = RequestOptions()
-                .placeholder(R.drawable.image)
-                .error(R.drawable.image)
-            Glide.with(itemView.context)
-                .applyDefaultRequestOptions(requestOptions)
-                .load(model.header_image)
-                .into(modelImage)
+            retrieveImage(R.drawable.image, itemView, model.header_image, modelImage)
         }
     }
 

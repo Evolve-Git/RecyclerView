@@ -7,10 +7,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 class Retriever {
     private val service: Service
 
-    companion object {
-        const val BASE_URL = "https://store.steampowered.com"
-    }
-
     init {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)

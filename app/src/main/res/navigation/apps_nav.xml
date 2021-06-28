@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/apps_nav"
-    app:startDestination="@id/loadingFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/loadingFragment"
@@ -26,4 +26,12 @@
         android:id="@+id/appDetailsFragment"
         android:name="com.evolve.recyclerview.AppDetailsFragment"
         android:label="AppDetailsFragment" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.evolve.recyclerview.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_loadingFragment"
+            app:destination="@id/loadingFragment" />
+    </fragment>
 </navigation>
