@@ -7,7 +7,8 @@ data class FeaturedApp(
         val original_price: Int = 0,
         val final_price: Int = 0,
         val currency: String = "",
-        val header_image: String = ""
+        val header_image: String = "",
+        var owned: Int = 0
         )
 
 data class FeaturedItems(

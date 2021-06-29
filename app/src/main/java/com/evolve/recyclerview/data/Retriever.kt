@@ -29,4 +29,16 @@ class Retriever {
     suspend fun getAppDetails(id: Int): Map<Int, AppDetailModel> {
         return service.retrieveAppDetails(id)
     }
+
+    suspend fun getUserInfo(userid: String): UserInfoModel {
+        return service.retrieveUserInfo(userid)
+    }
+
+    suspend fun getOwnedApps(userid: String): OwnedAppsModel{
+        return service.retrieveOwnedApps(userid)
+    }
+
+    suspend fun getWishlistedApps(userid: String, page: Int): Map<Int, WishlistedAppsModel>{
+        return service.retrieveWishlistedApps(userid, page)
+    }
 }

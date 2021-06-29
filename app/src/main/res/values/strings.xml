@@ -4,4 +4,7 @@
     <string name="featured">Featured Apps</string>
     <string name="favorite">Favorite Apps</string>
     <string name="loading">LOADING DATA</string>
+    <string name="owned">Owned</string>
+    <string name="wishlisted">Wishlisted</string>
+    <string name="welcome">Welcome, %1$s!</string>
 </resources>

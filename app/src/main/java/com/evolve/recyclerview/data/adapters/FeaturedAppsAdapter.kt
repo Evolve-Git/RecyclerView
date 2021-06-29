@@ -1,6 +1,7 @@
 package com.evolve.recyclerview.data.adapters
 
 import android.text.Html
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.evolve.recyclerview.R
 import com.evolve.recyclerview.databinding.RvItemBinding
 import com.evolve.recyclerview.data.models.FeaturedApp
+import com.evolve.recyclerview.data.models.OwnedAppsModel
+import com.evolve.recyclerview.data.models.WishlistedAppsModel
 import com.evolve.recyclerview.utility.retrieveImage
 
 class FeaturedAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<FeaturedApp,
@@ -28,14 +31,11 @@ class FeaturedAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<Feature
 
     class FeaturedAppsModelViewHolder constructor(itemView: View): RecyclerView.ViewHolder(itemView) {
         private val binding = RvItemBinding.bind(itemView)
-        private val modelImage = binding.modelImage
-        private val modelTitle = binding.modelTitle
-        private val modelId = binding.modelId
         var steamId = 0
 
         fun bind(model: FeaturedApp) {
             steamId = model.id
-            modelTitle.text = model.name
+            binding.modelTitle.text = model.name
 
             var tempOriginalPrice = model.original_price
             var price = model.final_price.toString()
@@ -48,9 +48,19 @@ class FeaturedAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<Feature
             }
             price += model.currency
             if (model.final_price == 0) price = "<b>FREE</b>"
-            modelId.text = Html.fromHtml("Price: $price", Html.FROM_HTML_MODE_COMPACT)
+            binding.modelId.text = Html.fromHtml("Price: $price", Html.FROM_HTML_MODE_COMPACT)
 
-            retrieveImage(R.drawable.image, itemView, model.header_image, modelImage)
+            retrieveImage(R.drawable.image, itemView, model.header_image, binding.modelImage)
+
+            when (model.owned){
+                1 -> {binding.ownedIcon.setImageResource(R.drawable.owned)
+                    binding.ownedText.setText(R.string.owned)}
+                2 -> {binding.ownedIcon.setImageResource(R.drawable.wishlisted)
+                    binding.ownedText.setText(R.string.wishlisted)}
+                else -> {binding.ownedIcon.setImageDrawable(null)
+                    binding.ownedText.text = null
+                }
+            }
         }
     }
 

@@ -2,7 +2,8 @@ package com.evolve.recyclerview.data.models
 
 data class AppModel (
         val appid: Int = 0,
-        val name: String = ""
+        val name: String = "",
+        var owned: Int = 0
         )
 
 data class AppList (

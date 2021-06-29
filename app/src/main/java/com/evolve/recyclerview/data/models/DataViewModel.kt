@@ -10,5 +10,8 @@ class DataViewModel : ViewModel() {
     lateinit var allApps: AllAppsModel
     lateinit var featuredApps: FeaturedItems
     lateinit var favApps: ArrayList<AppModel>
+    lateinit var userInfo: UserInfoModel
+    lateinit var ownedApps: OwnedAppsModel
+    var wislistedApps = mutableMapOf<Int, WishlistedAppsModel>()
     var appDetailCache = mutableMapOf<Int, AppDetailModel>()
 }

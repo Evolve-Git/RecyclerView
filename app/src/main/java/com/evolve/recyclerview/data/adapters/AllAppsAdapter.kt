@@ -1,16 +1,17 @@
 package com.evolve.recyclerview.data.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.evolve.recyclerview.R
 import com.evolve.recyclerview.databinding.RvItemBinding
 import com.evolve.recyclerview.data.models.AppModel
+import com.evolve.recyclerview.data.models.OwnedAppsModel
+import com.evolve.recyclerview.data.models.WishlistedAppsModel
 import com.evolve.recyclerview.utility.retrieveImage
 
 class AllAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<AppModel,
@@ -27,19 +28,25 @@ class AllAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<AppModel,
 
     class AllAppsModelViewHolder constructor(itemView: View): RecyclerView.ViewHolder(itemView){
         private val binding = RvItemBinding.bind(itemView)
-        private val modelImage = binding.modelImage
-        private val modelTitle = binding.modelTitle
-        private val modelId = binding.modelId
         var steamId = 0
 
         fun bind(model: AppModel){
             steamId = model.appid
-            modelTitle.text = model.name
-            modelId.text = model.appid.toString()
+            binding.modelTitle.text = model.name
+            binding.modelId.text = model.appid.toString()
+            when (model.owned){
+                1 -> {binding.ownedIcon.setImageResource(R.drawable.owned)
+                    binding.ownedText.setText(R.string.owned)}
+                2 -> {binding.ownedIcon.setImageResource(R.drawable.wishlisted)
+                    binding.ownedText.setText(R.string.wishlisted)}
+                else -> {binding.ownedIcon.setImageDrawable(null)
+                    binding.ownedText.text = null
+                }
+            }
 
             retrieveImage(R.drawable.image, itemView,
                 "https://steamcdn-a.akamaihd.net/steam/apps/"+
-                    model.appid.toString()+"/header_292x136.jpg", modelImage)
+                    model.appid.toString()+"/header_292x136.jpg", binding.modelImage)
         }
     }
 }
