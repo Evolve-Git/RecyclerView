@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
-import com.evolve.recyclerview.data.BASE_URL
+import com.evolve.recyclerview.utility.BASE_URL
 import com.evolve.recyclerview.data.models.DataViewModel
 import com.evolve.recyclerview.databinding.FragmentLoginBinding
 import com.evolve.recyclerview.utility.retrieveImage
@@ -22,6 +23,7 @@ import com.evolve.recyclerview.utility.retrieveImage
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     private val viewModel: DataViewModel by activityViewModels()
+    private lateinit var APP_NAME: String
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(
@@ -32,7 +34,8 @@ class LoginFragment : Fragment() {
             R.layout.fragment_login,container,false)
 
         binding.webView.settings.javaScriptEnabled = true
-        val REALM_PARAM = "Recyclerview"
+
+        APP_NAME = resources.getString(R.string.app_name)
 
         if (requireActivity().isNetworkConnected()) {
             viewModel.network = true
@@ -42,8 +45,8 @@ class LoginFragment : Fragment() {
                     "openid.identity=http://specs.openid.net/auth/2.0/identifier_select&" +
                     "openid.mode=checkid_setup&" +
                     "openid.ns=http://specs.openid.net/auth/2.0&" +
-                    "openid.realm=https://" + REALM_PARAM + "&" +
-                    "openid.return_to=https://" + REALM_PARAM + "/signin/"
+                    "openid.realm=https://$APP_NAME&" +
+                    "openid.return_to=https://$APP_NAME/signin/"
             binding.webView.loadUrl(url)
             binding.webView.webViewClient = object : WebViewClient() {
                 override fun onPageStarted(
@@ -51,7 +54,7 @@ class LoginFragment : Fragment() {
                     favicon: Bitmap?
                 ) {
                     val userUrl: Uri = Uri.parse(url)
-                    if (userUrl.authority.equals(REALM_PARAM.lowercase())) {
+                    if (userUrl.authority.equals(APP_NAME.lowercase())) {
                         // That means that authentication is finished and the url contains user's id.
                         binding.webView.stopLoading()
 
@@ -86,6 +89,6 @@ class LoginFragment : Fragment() {
             binding.root, "$BASE_URL/favicon.ico",
             (requireActivity() as MainActivity).activity.icon)
         else (requireActivity() as MainActivity).supportActionBar?.title =
-            resources.getString(R.string.app_name) + " in Offline mode"
+            "$APP_NAME in Offline mode"
     }
 }

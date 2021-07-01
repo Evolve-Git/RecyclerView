@@ -38,6 +38,9 @@ class MainActivity : AppCompatActivity() {
             val jsonFeaturedApps: String = Gson().toJson(viewModel.featuredApps)
             File("${filesDir}/featuredapps.json").writeText(jsonFeaturedApps)
 
+            val jsonFeaturedCategories: String = Gson().toJson(viewModel.featuredCategories)
+            File("${filesDir}/featuredcategories.json").writeText(jsonFeaturedCategories)
+
             val jsonFavApps: String = Gson().toJson(viewModel.favApps)
             File("${filesDir}/favapps.json").writeText(jsonFavApps)
         }

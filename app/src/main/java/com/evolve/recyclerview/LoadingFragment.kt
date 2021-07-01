@@ -1,7 +1,6 @@
 package com.evolve.recyclerview
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,7 @@ import com.evolve.recyclerview.data.LocalDataSource
 import com.evolve.recyclerview.data.Retriever
 import com.evolve.recyclerview.data.models.DataViewModel
 import com.evolve.recyclerview.databinding.FragmentLoadingBinding
+import com.evolve.recyclerview.utility.setAvatar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,46 +26,36 @@ class LoadingFragment : Fragment() {
 
         CoroutineScope(Dispatchers.Main).launch {
             if (viewModel.network) {
+                binding.progressBar.max = 70
                 viewModel.userInfo = Retriever().getUserInfo(viewModel.userId)
                 binding.textWelcome.text = String.format(resources.getString(R.string.welcome),
-                    viewModel.userInfo.response.players[0].personaname)
-                progress(10)
+                    viewModel.userInfo.personaname)
+                setAvatar(viewModel.userInfo.avatar)
+                addProgress(10)
 
                 viewModel.ownedApps = Retriever().getOwnedApps(viewModel.userId)
-                progress(10)
+                addProgress(10)
 
                 var counter = 0
                 var result = Retriever().getWishlistedApps(viewModel.userId, counter)
                 while (result.isNotEmpty()){
-                    Log.e("wishlist", result.toString())
                     viewModel.wislistedApps.putAll(result)
                     counter += 1
                     result = Retriever().getWishlistedApps(viewModel.userId, counter)
-                    progress(1)
+                    addProgress(1)
                 }
 
                 viewModel.allApps = Retriever().getAppList()
-                progress(10)
-
-                for (app in viewModel.allApps.applist.apps){
-                    if (viewModel.ownedApps.response.games.any { it.appid == app.appid })
-                        app.owned = 1
-                    else if (viewModel.wislistedApps.containsKey(app.appid)) app.owned = 2
-                }
-                progress(10)
+                addProgress(10)
 
                 viewModel.featuredApps = Retriever().getFeaturedAppList()
-                progress(10)
+                addProgress(10)
 
-                for (app in viewModel.featuredApps.items){
-                    if (viewModel.ownedApps.response.games.any { it.appid == app.id })
-                        app.owned = 1
-                    else if (viewModel.wislistedApps.containsKey(app.id)) app.owned = 2
-                }
-                progress(10)
+                viewModel.featuredCategories = Retriever().getFeaturedCategoriesList()
+                addProgress(10)
 
                 viewModel.favApps = LocalDataSource.loadFavAppsData(requireContext())
-                progress(10)
+                addProgress(10)
 
                 view?.findNavController()?.navigate(R.id.action_loadingFragment_to_RVFragment)
             } else {
@@ -74,7 +64,7 @@ class LoadingFragment : Fragment() {
         }
     }
 
-    private fun progress(step: Int){
+    private fun addProgress(step: Int){
         binding.progressBar.progress += step
     }
 

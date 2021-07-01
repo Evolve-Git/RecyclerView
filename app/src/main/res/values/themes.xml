@@ -2,11 +2,11 @@
     <!-- Base application theme. -->
     <style name="Theme.RecyclerView" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimary">@color/bg</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/text</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondary">@color/light_bg</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
@@ -15,7 +15,13 @@
     </style>
 
     <style name="ProgressBarStyle">
-        <item name="colorAccent">@color/purple_200</item>
+        <item name="colorAccent">@color/text</item>
     </style>
+
+    <style name="ToolbarTheme" parent="Theme.RecyclerView">
+        <!-- Customize color of navigation drawer icon and back arrow -->
+        <item name="colorControlNormal">@color/text</item>
+    </style>
+
 
 </resources>

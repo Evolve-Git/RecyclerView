@@ -1,6 +1,7 @@
 package com.evolve.recyclerview.data
 
 import com.evolve.recyclerview.data.models.*
+import com.evolve.recyclerview.utility.*
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -11,6 +12,9 @@ interface Service {
 
     @GET(FEATURED_APPS_URL)
     suspend fun retrieveFeaturedAppList(): FeaturedAppsModel
+
+    @GET(FEATURED_CAT_URL)
+    suspend fun retrieveFeaturedCategoriesList(): FeaturedCategoriesModel
 
     @GET(APP_DETAILS_URL)
     suspend fun retrieveAppDetails(@Query("appids") id: Int): Map<Int, AppDetailModel>

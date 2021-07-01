@@ -1,23 +1,23 @@
 package com.evolve.recyclerview.data.adapters
 
 import android.text.Html
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.evolve.recyclerview.R
 import com.evolve.recyclerview.databinding.RvItemBinding
 import com.evolve.recyclerview.data.models.FeaturedApp
-import com.evolve.recyclerview.data.models.OwnedAppsModel
+import com.evolve.recyclerview.data.models.OwnedAppModel
 import com.evolve.recyclerview.data.models.WishlistedAppsModel
 import com.evolve.recyclerview.utility.retrieveImage
+import com.evolve.recyclerview.utility.setOwnedTag
 
-class FeaturedAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<FeaturedApp,
+class FeaturedAppsAdapter(val ownedApps: Map<Int, OwnedAppModel>,
+                          val wishApps: Map<Int, WishlistedAppsModel>,
+                          val clickListener: (Int) -> Unit): ListAdapter<FeaturedApp,
         FeaturedAppsAdapter.FeaturedAppsModelViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeaturedAppsModelViewHolder {
         return FeaturedAppsModelViewHolder(
@@ -25,7 +25,12 @@ class FeaturedAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<Feature
     }
 
     override fun onBindViewHolder(holder: FeaturedAppsModelViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val owned = when{
+            ownedApps.containsKey(getItem(position).id) -> 1
+            wishApps.containsKey(getItem(position).id) -> 2
+            else -> 0
+        }
+        holder.bind(getItem(position), owned)
         holder.itemView.setOnClickListener { clickListener(holder.steamId) }
     }
 
@@ -33,7 +38,7 @@ class FeaturedAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<Feature
         private val binding = RvItemBinding.bind(itemView)
         var steamId = 0
 
-        fun bind(model: FeaturedApp) {
+        fun bind(model: FeaturedApp, owned: Int) {
             steamId = model.id
             binding.modelTitle.text = model.name
 
@@ -50,20 +55,13 @@ class FeaturedAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<Feature
             if (model.final_price == 0) price = "<b>FREE</b>"
             binding.modelId.text = Html.fromHtml("Price: $price", Html.FROM_HTML_MODE_COMPACT)
 
-            retrieveImage(R.drawable.image, itemView, model.header_image, binding.modelImage)
+            binding.setOwnedTag(owned)
 
-            when (model.owned){
-                1 -> {binding.ownedIcon.setImageResource(R.drawable.owned)
-                    binding.ownedText.setText(R.string.owned)}
-                2 -> {binding.ownedIcon.setImageResource(R.drawable.wishlisted)
-                    binding.ownedText.setText(R.string.wishlisted)}
-                else -> {binding.ownedIcon.setImageDrawable(null)
-                    binding.ownedText.text = null
-                }
-            }
+            retrieveImage(R.drawable.image, itemView, model.header_image, binding.modelImage)
         }
     }
 
+    //Cant find any uses for this:
     class DiffCallback : DiffUtil.ItemCallback<FeaturedApp>() {
 
         override fun areItemsTheSame(oldItem: FeaturedApp, newItem: FeaturedApp): Boolean {

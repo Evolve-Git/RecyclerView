@@ -12,14 +12,13 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.evolve.recyclerview.data.*
 import com.evolve.recyclerview.data.adapters.AllAppsAdapter
 import com.evolve.recyclerview.data.adapters.FeaturedAppsAdapter
 import com.evolve.recyclerview.data.models.AppModel
 import com.evolve.recyclerview.data.models.DataViewModel
 import com.evolve.recyclerview.data.models.FeaturedItems
 import com.evolve.recyclerview.databinding.FragmentRvBinding
-import com.evolve.recyclerview.utility.retrieveImage
+import com.evolve.recyclerview.utility.*
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.*
 
@@ -50,17 +49,15 @@ class RVFragment : Fragment() {
 
         setRecyclerViewItemTouchListener()
 
-        setAvatar()
-
         retrieveRepositories(viewModel.tab)
 
         return binding.root
     }
 
-    private fun setAvatar(){
-        retrieveImage(android.R.drawable.ic_menu_report_image, binding.root,
-            viewModel.userInfo.response.players[0].avatar,
-            (requireActivity() as MainActivity).activity.icon)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setAvatar(viewModel.userInfo.avatar)
     }
 
     private fun onClick(id: Int){
@@ -136,7 +133,9 @@ class RVFragment : Fragment() {
     private fun initRVall(data: List<AppModel>) {
         binding.rv.apply {
             layoutManager = LinearLayoutManager(this.context)
-            adapter = AllAppsAdapter(clickListener = { onClick(it) } ).apply { submitList(data) }
+            adapter = AllAppsAdapter(
+                viewModel.ownedApps, viewModel.wislistedApps,
+                clickListener = { onClick(it) } ).apply { submitList(data) }
         }
     }
 
@@ -144,6 +143,7 @@ class RVFragment : Fragment() {
         binding.rv.apply {
             layoutManager = LinearLayoutManager(this.context)
             adapter = FeaturedAppsAdapter(
+                viewModel.ownedApps, viewModel.wislistedApps,
                 clickListener = { onClick(it) } ).apply { submitList(data.items) }
         }
     }

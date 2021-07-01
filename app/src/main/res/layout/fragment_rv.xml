@@ -21,19 +21,22 @@ xmlns:tools="http://schemas.android.com/tools">
                 android:id="@+id/tabAllApps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/all" />
+                android:text="@string/all"
+                android:fontFamily="@font/roboto"/>
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/tabFeaturedApps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/featured" />
+                android:text="@string/featured"
+                android:fontFamily="@font/roboto"/>
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/tabFav"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/favorite" />
+                android:text="@string/favorite"
+                android:fontFamily="@font/roboto"/>
 
         </com.google.android.material.tabs.TabLayout>
 

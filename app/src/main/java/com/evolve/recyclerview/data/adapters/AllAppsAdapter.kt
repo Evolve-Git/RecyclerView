@@ -1,6 +1,5 @@
 package com.evolve.recyclerview.data.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,19 +9,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.evolve.recyclerview.R
 import com.evolve.recyclerview.databinding.RvItemBinding
 import com.evolve.recyclerview.data.models.AppModel
-import com.evolve.recyclerview.data.models.OwnedAppsModel
+import com.evolve.recyclerview.data.models.OwnedAppModel
 import com.evolve.recyclerview.data.models.WishlistedAppsModel
 import com.evolve.recyclerview.utility.retrieveImage
+import com.evolve.recyclerview.utility.setOwnedTag
 
-class AllAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<AppModel,
+class AllAppsAdapter(val ownedApps: Map<Int, OwnedAppModel>,
+                     val wishApps: Map<Int, WishlistedAppsModel>,
+                     val clickListener: (Int) -> Unit): ListAdapter<AppModel,
         AllAppsAdapter.AllAppsModelViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllAppsModelViewHolder {
-        return AllAppsModelViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.rv_item,
-            parent, false))
+        return AllAppsModelViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.rv_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: AllAppsModelViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val owned = when{
+            ownedApps.containsKey(getItem(position).appid) -> 1
+            wishApps.containsKey(getItem(position).appid) -> 2
+            else -> 0
+        }
+        holder.bind(getItem(position), owned)
         holder.itemView.setOnClickListener { clickListener(holder.steamId) }
     }
 
@@ -30,19 +37,12 @@ class AllAppsAdapter(val clickListener: (Int) -> Unit): ListAdapter<AppModel,
         private val binding = RvItemBinding.bind(itemView)
         var steamId = 0
 
-        fun bind(model: AppModel){
+        fun bind(model: AppModel, owned: Int){
             steamId = model.appid
             binding.modelTitle.text = model.name
             binding.modelId.text = model.appid.toString()
-            when (model.owned){
-                1 -> {binding.ownedIcon.setImageResource(R.drawable.owned)
-                    binding.ownedText.setText(R.string.owned)}
-                2 -> {binding.ownedIcon.setImageResource(R.drawable.wishlisted)
-                    binding.ownedText.setText(R.string.wishlisted)}
-                else -> {binding.ownedIcon.setImageDrawable(null)
-                    binding.ownedText.text = null
-                }
-            }
+
+            binding.setOwnedTag(owned)
 
             retrieveImage(R.drawable.image, itemView,
                 "https://steamcdn-a.akamaihd.net/steam/apps/"+
