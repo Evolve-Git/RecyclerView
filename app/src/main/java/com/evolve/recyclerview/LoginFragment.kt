@@ -91,4 +91,6 @@ class LoginFragment : Fragment() {
         else (requireActivity() as MainActivity).supportActionBar?.title =
             "$APP_NAME in Offline mode"
     }
+
+    //TODO resolve chromium crashes on fragment change (unload it?)
 }

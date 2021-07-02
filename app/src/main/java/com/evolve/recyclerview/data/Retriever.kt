@@ -4,6 +4,8 @@ import com.evolve.recyclerview.data.models.*
 import com.evolve.recyclerview.utility.BASE_URL
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
+import kotlin.collections.ArrayList
 
 class Retriever {
     private val service: Service
@@ -27,8 +29,8 @@ class Retriever {
         return FeaturedItems(parsedList)
     }
 
-    suspend fun getFeaturedCategoriesList(): FeaturedCategoriesModel{
-        return service.retrieveFeaturedCategoriesList()
+    suspend fun getFeaturedCategoriesList(currency: Int): FeaturedCategoriesModel{
+        return service.retrieveFeaturedCategoriesList(currency)
     }
 
     suspend fun getAppDetails(id: Int): Map<Int, AppDetailModel>{

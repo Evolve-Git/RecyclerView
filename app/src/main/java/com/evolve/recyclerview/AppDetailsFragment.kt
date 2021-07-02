@@ -42,6 +42,12 @@ class AppDetailsFragment : Fragment() {
                         viewModel.appDetailCache.putAll(appDetails)
                 }
 
+                binding.detailsLayout.setBackgroundResource(when (viewModel.owned){
+                    1 ->    R.drawable.rvitem_owned
+                    2 ->    R.drawable.rvitem_wishlisted
+                    else -> R.drawable.rvitem
+                })
+
                 if (viewModel.appDetailCache[viewModel.appId] != null) {
                     data = viewModel.appDetailCache[viewModel.appId]!!.data
 
@@ -50,9 +56,11 @@ class AppDetailsFragment : Fragment() {
                     binding.title.text = data.name
 
                     var price = "Price: "
-                    price += if (data.is_free) "Free"
-                    else if (data.price_overview == null) "not specified"
-                    else data.price_overview?.final_formatted
+                    price += when{
+                        data.is_free ->                 "Free"
+                        data.price_overview == null ->  "not specified"
+                        else ->                         data.price_overview?.final_formatted
+                    }
                     binding.price.text = price
 
                     loadImage(data.header_image)

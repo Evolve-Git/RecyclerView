@@ -12,10 +12,14 @@ import com.evolve.recyclerview.data.LocalDataSource
 import com.evolve.recyclerview.data.Retriever
 import com.evolve.recyclerview.data.models.DataViewModel
 import com.evolve.recyclerview.databinding.FragmentLoadingBinding
+import com.evolve.recyclerview.utility.EUR
+import com.evolve.recyclerview.utility.RUB
+import com.evolve.recyclerview.utility.USD
 import com.evolve.recyclerview.utility.setAvatar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoadingFragment : Fragment() {
     private lateinit var binding: FragmentLoadingBinding
@@ -24,13 +28,13 @@ class LoadingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             if (viewModel.network) {
-                binding.progressBar.max = 70
                 viewModel.userInfo = Retriever().getUserInfo(viewModel.userId)
-                binding.textWelcome.text = String.format(resources.getString(R.string.welcome),
-                    viewModel.userInfo.personaname)
-                setAvatar(viewModel.userInfo.avatar)
+                withContext(Dispatchers.Main){
+                    binding.textWelcome.text = String.format(resources.getString(R.string.welcome),
+                        viewModel.userInfo.personaname)
+                    setAvatar(viewModel.userInfo.avatar)}
                 addProgress(10)
 
                 viewModel.ownedApps = Retriever().getOwnedApps(viewModel.userId)
@@ -51,16 +55,26 @@ class LoadingFragment : Fragment() {
                 viewModel.featuredApps = Retriever().getFeaturedAppList()
                 addProgress(10)
 
-                viewModel.featuredCategories = Retriever().getFeaturedCategoriesList()
+                viewModel.featuredCategories = Retriever().getFeaturedCategoriesList(
+                    getCurrency(viewModel.featuredApps.items[0].currency))
                 addProgress(10)
 
                 viewModel.favApps = LocalDataSource.loadFavAppsData(requireContext())
                 addProgress(10)
 
-                view?.findNavController()?.navigate(R.id.action_loadingFragment_to_RVFragment)
+                withContext(Dispatchers.Main){
+                    view?.findNavController()?.navigate(R.id.action_loadingFragment_to_RVFragment)}
             } else {
                 useLocalData()
             }
+        }
+    }
+
+    private fun getCurrency(currency: String): Int{
+        return when (currency){
+            "EUR" -> EUR
+            "RUB" -> RUB
+            else  -> USD
         }
     }
 
@@ -74,6 +88,8 @@ class LoadingFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(inflater,
             R.layout.fragment_loading,container,false)
+
+        binding.progressBar.max = 70
 
         return binding.root
     }

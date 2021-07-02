@@ -7,6 +7,7 @@ class DataViewModel : ViewModel() {
     var userId = ""
     var tab = 0
     var appId = 0
+    var owned = 0
     lateinit var allApps: AllAppsModel
     lateinit var featuredApps: FeaturedItems
     lateinit var featuredCategories: FeaturedCategoriesModel

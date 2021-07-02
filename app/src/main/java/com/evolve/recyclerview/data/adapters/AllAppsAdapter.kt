@@ -14,9 +14,9 @@ import com.evolve.recyclerview.data.models.WishlistedAppsModel
 import com.evolve.recyclerview.utility.retrieveImage
 import com.evolve.recyclerview.utility.setOwnedTag
 
-class AllAppsAdapter(val ownedApps: Map<Int, OwnedAppModel>,
-                     val wishApps: Map<Int, WishlistedAppsModel>,
-                     val clickListener: (Int) -> Unit): ListAdapter<AppModel,
+class AllAppsAdapter(private val ownedApps: Map<Int, OwnedAppModel>,
+                     private val wishApps: Map<Int, WishlistedAppsModel>,
+                     val clickListener: (Array<Int>) -> Unit): ListAdapter<AppModel,
         AllAppsAdapter.AllAppsModelViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllAppsModelViewHolder {
         return AllAppsModelViewHolder(
@@ -30,7 +30,7 @@ class AllAppsAdapter(val ownedApps: Map<Int, OwnedAppModel>,
             else -> 0
         }
         holder.bind(getItem(position), owned)
-        holder.itemView.setOnClickListener { clickListener(holder.steamId) }
+        holder.itemView.setOnClickListener { clickListener(arrayOf(holder.steamId, owned)) }
     }
 
     class AllAppsModelViewHolder constructor(itemView: View): RecyclerView.ViewHolder(itemView){

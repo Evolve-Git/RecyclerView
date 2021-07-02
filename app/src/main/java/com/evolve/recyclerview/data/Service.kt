@@ -14,7 +14,8 @@ interface Service {
     suspend fun retrieveFeaturedAppList(): FeaturedAppsModel
 
     @GET(FEATURED_CAT_URL)
-    suspend fun retrieveFeaturedCategoriesList(): FeaturedCategoriesModel
+    suspend fun retrieveFeaturedCategoriesList(@Query("currency")
+                                                   currency: Int): FeaturedCategoriesModel
 
     @GET(APP_DETAILS_URL)
     suspend fun retrieveAppDetails(@Query("appids") id: Int): Map<Int, AppDetailModel>

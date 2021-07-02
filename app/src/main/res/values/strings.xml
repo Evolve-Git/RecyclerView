@@ -1,10 +1,19 @@
 <resources>
     <string name="app_name">RecyclerView</string>
-    <string name="all">All Apps</string>
-    <string name="featured">Featured Apps</string>
+
+    <string name="all">All</string>
+    <string name="featured">Featured</string>
+    <string name="specials">Specials</string>
+    <string name="new_releases">New releases</string>
+    <string name="coming_soon">Coming soon</string>
+    <string name="top_sellers">Top sellers</string>
+
     <string name="favorite">Favorite Apps</string>
+
+    <string name="welcome">Welcome, %1$s!</string>
     <string name="loading">LOADING DATA</string>
+
     <string name="owned">IN LIBRARY</string>
     <string name="wishlisted">ON WISHLIST</string>
-    <string name="welcome">Welcome, %1$s!</string>
+
 </resources>

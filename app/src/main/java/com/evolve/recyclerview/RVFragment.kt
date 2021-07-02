@@ -35,11 +35,7 @@ class RVFragment : Fragment() {
 
         binding.tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab : TabLayout.Tab) {
-                when (tab.position) {
-                    1 ->    retrieveRepositories(FEATURED_APPS)
-                    2 ->    retrieveRepositories(FAV_APPS)
-                    else -> retrieveRepositories(ALL_APPS)
-                }
+                retrieveRepositories(tab.position)
                 viewModel.tab = tab.position
             }
             override fun onTabUnselected(p0: TabLayout.Tab?) {}
@@ -60,8 +56,9 @@ class RVFragment : Fragment() {
         setAvatar(viewModel.userInfo.avatar)
     }
 
-    private fun onClick(id: Int){
+    private fun onClick(id: Int, owned: Int){
         viewModel.appId = id
+        viewModel.owned = owned
         view?.findNavController()?.navigate(R.id.action_RVFragment_to_appDetailsFragment)
     }
 
@@ -77,20 +74,24 @@ class RVFragment : Fragment() {
                 val position = viewHolder.bindingAdapterPosition
                 if (swipeDir == ItemTouchHelper.LEFT) {
                     when (binding.tabLayout.selectedTabPosition){
-                        1 ->    viewModel.featuredApps.items.removeAt(position)
-                        2 ->    viewModel.favApps.removeAt(position)
+                        0 ->    viewModel.featuredApps.items.removeAt(position)
+                        1 ->    viewModel.featuredCategories.specials.items.removeAt(position)
+                        2 ->    viewModel.featuredCategories.new_releases.items.removeAt(position)
+                        3 ->    viewModel.featuredCategories.coming_soon.items.removeAt(position)
+                        4 ->    viewModel.featuredCategories.top_sellers.items.removeAt(position)
+                        5 ->    viewModel.favApps.removeAt(position)
                         else -> viewModel.allApps.applist.apps.removeAt(position)
                     }
                     binding.rv.adapter!!.notifyItemRemoved(position)
                 }
                 else {
                     when (binding.tabLayout.selectedTabPosition){
-                        1 ->    {
-                            addToFavList(AppModel(viewModel.featuredApps.items[position].id,
-                                viewModel.featuredApps.items[position].name))
-                            viewModel.featuredApps.items.removeAt(position)
-                        }
-                        2 ->    viewModel.favApps.removeAt(position)
+                        0 ->    removeFromList(viewModel.featuredApps, position)
+                        1 ->    removeFromList(viewModel.featuredCategories.specials, position)
+                        2 ->    removeFromList(viewModel.featuredCategories.new_releases, position)
+                        3 ->    removeFromList(viewModel.featuredCategories.coming_soon, position)
+                        4 ->    removeFromList(viewModel.featuredCategories.top_sellers, position)
+                        5 ->    viewModel.favApps.removeAt(position)
                         else -> {
                             addToFavList(viewModel.allApps.applist.apps[position])
                             viewModel.allApps.applist.apps.removeAt(position)
@@ -103,6 +104,11 @@ class RVFragment : Fragment() {
 
         val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
         itemTouchHelper.attachToRecyclerView(binding.rv)
+    }
+
+    private fun removeFromList(list: FeaturedItems, position: Int){
+        addToFavList(AppModel(list.items[position].id, list.items[position].name))
+        list.items.removeAt(position)
     }
 
     private fun addToFavList(app: AppModel){
@@ -124,6 +130,10 @@ class RVFragment : Fragment() {
         coroutineScope.launch(errorHandler) {
             when (choice) {
                 FEATURED_APPS ->    initRVfeatured(viewModel.featuredApps)
+                SPECIALS ->         initRVfeatured(viewModel.featuredCategories.specials)
+                NEW_RELEASES ->     initRVfeatured(viewModel.featuredCategories.new_releases)
+                COMING_SOON ->      initRVfeatured(viewModel.featuredCategories.coming_soon)
+                TOP_SELLERS ->      initRVfeatured(viewModel.featuredCategories.top_sellers)
                 FAV_APPS ->         initRVall(viewModel.favApps)
                 else ->             initRVall(viewModel.allApps.applist.apps)
             }
@@ -135,7 +145,7 @@ class RVFragment : Fragment() {
             layoutManager = LinearLayoutManager(this.context)
             adapter = AllAppsAdapter(
                 viewModel.ownedApps, viewModel.wislistedApps,
-                clickListener = { onClick(it) } ).apply { submitList(data) }
+                clickListener = { onClick(it[0], it[1]) } ).apply { submitList(data) }
         }
     }
 
@@ -144,7 +154,7 @@ class RVFragment : Fragment() {
             layoutManager = LinearLayoutManager(this.context)
             adapter = FeaturedAppsAdapter(
                 viewModel.ownedApps, viewModel.wislistedApps,
-                clickListener = { onClick(it) } ).apply { submitList(data.items) }
+                clickListener = { onClick(it[0], it[1]) } ).apply { submitList(data.items) }
         }
     }
 
