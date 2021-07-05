@@ -24,7 +24,6 @@
                 android:id="@+id/icon"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@android:drawable/ic_menu_report_image"
                 tools:ignore="ContentDescription" />
         </androidx.appcompat.widget.Toolbar>
 

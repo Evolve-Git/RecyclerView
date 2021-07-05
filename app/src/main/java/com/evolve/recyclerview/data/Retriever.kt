@@ -4,7 +4,6 @@ import com.evolve.recyclerview.data.models.*
 import com.evolve.recyclerview.utility.BASE_URL
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
 import kotlin.collections.ArrayList
 
 class Retriever {

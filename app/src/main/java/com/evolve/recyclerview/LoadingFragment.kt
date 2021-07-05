@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
-import com.evolve.recyclerview.data.LocalDataSource
+import com.evolve.recyclerview.data.DataStorePrefs
 import com.evolve.recyclerview.data.Retriever
 import com.evolve.recyclerview.data.models.DataViewModel
 import com.evolve.recyclerview.databinding.FragmentLoadingBinding
@@ -25,63 +25,6 @@ class LoadingFragment : Fragment() {
     private lateinit var binding: FragmentLoadingBinding
     private val viewModel: DataViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        CoroutineScope(Dispatchers.IO).launch {
-            if (viewModel.network) {
-                viewModel.userInfo = Retriever().getUserInfo(viewModel.userId)
-                withContext(Dispatchers.Main){
-                    binding.textWelcome.text = String.format(resources.getString(R.string.welcome),
-                        viewModel.userInfo.personaname)
-                    setAvatar(viewModel.userInfo.avatar)}
-                addProgress(10)
-
-                viewModel.ownedApps = Retriever().getOwnedApps(viewModel.userId)
-                addProgress(10)
-
-                var counter = 0
-                var result = Retriever().getWishlistedApps(viewModel.userId, counter)
-                while (result.isNotEmpty()){
-                    viewModel.wislistedApps.putAll(result)
-                    counter += 1
-                    result = Retriever().getWishlistedApps(viewModel.userId, counter)
-                    addProgress(1)
-                }
-
-                viewModel.allApps = Retriever().getAppList()
-                addProgress(10)
-
-                viewModel.featuredApps = Retriever().getFeaturedAppList()
-                addProgress(10)
-
-                viewModel.featuredCategories = Retriever().getFeaturedCategoriesList(
-                    getCurrency(viewModel.featuredApps.items[0].currency))
-                addProgress(10)
-
-                viewModel.favApps = LocalDataSource.loadFavAppsData(requireContext())
-                addProgress(10)
-
-                withContext(Dispatchers.Main){
-                    view?.findNavController()?.navigate(R.id.action_loadingFragment_to_RVFragment)}
-            } else {
-                useLocalData()
-            }
-        }
-    }
-
-    private fun getCurrency(currency: String): Int{
-        return when (currency){
-            "EUR" -> EUR
-            "RUB" -> RUB
-            else  -> USD
-        }
-    }
-
-    private fun addProgress(step: Int){
-        binding.progressBar.progress += step
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -94,10 +37,77 @@ class LoadingFragment : Fragment() {
         return binding.root
     }
 
-    private fun useLocalData(){
-        viewModel.allApps = LocalDataSource.loadAllAppsData(requireContext())
-        viewModel.featuredApps = LocalDataSource.loadFeaturedAppsData(requireContext())
-        viewModel.favApps = LocalDataSource.loadFavAppsData(requireContext())
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val dataStorePrefs = DataStorePrefs(requireActivity().applicationContext)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            if (viewModel.network) {
+                viewModel.userInfo = Retriever().getUserInfo(viewModel.userId)
+                withContext(Dispatchers.Main){
+                    binding.textWelcome.text = String.format(resources.getString(R.string.welcome),
+                        viewModel.userInfo.personaname)
+                    setAvatar(viewModel.userInfo.avatar)}
+                addProgress()
+
+                viewModel.ownedApps = Retriever().getOwnedApps(viewModel.userId)
+                addProgress()
+
+                var counter = 0
+                var result = Retriever().getWishlistedApps(viewModel.userId, counter)
+                while (result.isNotEmpty()){
+                    viewModel.wislistedApps.putAll(result)
+                    counter += 1
+                    result = Retriever().getWishlistedApps(viewModel.userId, counter)
+                    addProgress(1)
+                }
+
+                viewModel.allApps = Retriever().getAppList()
+                addProgress()
+
+                viewModel.featuredApps = Retriever().getFeaturedAppList()
+                addProgress()
+
+                viewModel.featuredCategories = Retriever().getFeaturedCategoriesList(
+                    getCurrency(viewModel.featuredApps.items[0].currency))
+                addProgress()
+
+                viewModel.favApps = dataStorePrefs.restoreFavApps()
+                addProgress()
+
+                withContext(Dispatchers.Main){
+                    switchToRVFragment()}
+            } else {
+                dataStorePrefs.restoreData(viewModel)
+                addProgress(40)
+
+                viewModel.favApps = dataStorePrefs.restoreFavApps()
+                addProgress()
+
+                viewModel.ownedApps = mapOf()
+                addProgress()
+
+                withContext(Dispatchers.Main) {
+                    switchToRVFragment()
+                }
+            }
+        }
+    }
+
+    private fun switchToRVFragment(){
         view?.findNavController()?.navigate(R.id.action_loadingFragment_to_RVFragment)
+    }
+
+    private fun getCurrency(currency: String): Int{
+        return when (currency){
+            "EUR" -> EUR
+            "RUB" -> RUB
+            else  -> USD
+        }
+    }
+
+    private fun addProgress(step: Int = 10){
+        binding.progressBar.progress += step
     }
 }

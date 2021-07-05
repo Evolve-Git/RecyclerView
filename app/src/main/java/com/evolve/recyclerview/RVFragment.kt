@@ -47,13 +47,12 @@ class RVFragment : Fragment() {
 
         retrieveRepositories(viewModel.tab)
 
+        if (viewModel.network)
+            CoroutineScope(Dispatchers.Main).launch {
+                setAvatar(viewModel.userInfo.avatar)
+            }
+
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setAvatar(viewModel.userInfo.avatar)
     }
 
     private fun onClick(id: Int, owned: Int){
